@@ -753,27 +753,37 @@
 
         <!-- Attack Scenario Selection Cards -->
         <h3 style="font-size: 18px; margin-bottom: 16px;">Select Demo Scenario:</h3>
-        <div class="scenarios-grid">
+        <div class="scenarios-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
             <div class="scenario-card active" id="scenarioCompute" onclick="selectScenario('compute')">
                 <div class="scenario-title">
-                    <span>Scenario A: EC2 Malware Infection Isolation</span>
-                    <span style="color: var(--accent-red);">HIGH SEVERITY</span>
+                    <span>AWS: EC2 Malware Isolation</span>
+                    <span style="color: var(--accent-red);">HIGH</span>
                 </div>
-                <div class="scenario-desc">SimulatesGuardDuty malware alert on production EC2 web server (i-0a8b9c1d2e3f45678). Executes security group quarantine and EBS forensic snapshot.</div>
-                <div class="scenario-meta">ACTIONS: SG_QUARANTINE • EBS_SNAPSHOT • QUARANTINE_TAGGING</div>
+                <div class="scenario-desc">GuardDuty malware alert on production EC2 (i-0a8b9c1d2e3f45678). Executes Security Group swap & EBS forensic snapshot.</div>
+                <div class="scenario-meta">ACTIONS: AWS_SG_QUARANTINE • EBS_SNAPSHOT</div>
             </div>
 
             <div class="scenario-card" id="scenarioIAM" onclick="selectScenario('iam')">
                 <div class="scenario-title">
-                    <span>Scenario B: Compromised IAM User Credentials</span>
+                    <span>AWS: Compromised IAM User</span>
                     <span style="color: var(--accent-red);">CRITICAL</span>
                 </div>
-                <div class="scenario-desc">Simulates unauthorized credential access alert on IAM user (sec-analyst-temp). Attaches DenyAll inline policy, deactivates access keys, and kills active SSO sessions.</div>
-                <div class="scenario-meta">ACTIONS: DENY_ALL_POLICY • DEACTIVATE_KEYS • REVOKE_SESSIONS</div>
+                <div class="scenario-desc">Unauthorized credential access on IAM user (sec-analyst-temp). Attaches DenyAll inline policy, deactivates keys & revokes sessions.</div>
+                <div class="scenario-meta">ACTIONS: DENY_ALL_POLICY • REVOKE_SESSIONS</div>
+            </div>
+
+            <div class="scenario-card" id="scenarioAzure" onclick="selectScenario('azure')">
+                <div class="scenario-title">
+                    <span>Azure: VM NSG Lockdown & Disk Snapshot</span>
+                    <span style="color: var(--accent-red);">CRITICAL</span>
+                </div>
+                <div class="scenario-desc">Microsoft Defender for Cloud alert on Azure VM (vm-az-prod-web-01). Swaps NSG to DenyAll & creates Managed Disk snapshot.</div>
+                <div class="scenario-meta">ACTIONS: AZURE_NSG_DENY_ALL • MANAGED_DISK_SNAP</div>
             </div>
         </div>
 
     </div>
+
 
     <!-- Footer -->
     <footer>
@@ -814,6 +824,18 @@
                     { time: 12, step: "SESSION_TERMINATION", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "SESSIONS_KILLED", log: "Revoking active OAuth / SSO tokens. 2 active sessions terminated.", voice: "Step 5: Active SSO/OAuth sessions killed. Attacker completely revoked across all global endpoints." },
                     { time: 15, step: "CONTAINMENT_SUCCESSFUL", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "LOCKED_DOWN", log: "SUCCESS: IAM User successfully quarantined. Total execution time: 0.35 seconds.", voice: "Demonstration complete: Compromised credential neutralized with zero human delay!" }
                 ]
+            },
+            azure: {
+                targetName: "Azure VM: vm-az-prod-web-01",
+                targetSub: "Microsoft Defender Alert (Azure EastUS)",
+                timeline: [
+                    { time: 0, step: "WEBHOOK_INGEST", alertStatus: "active-threat", tagAlert: "SENTINEL ALERT", orchestratorStatus: "", tagOrchestrator: "STANDBY", targetStatus: "active-threat", tagTarget: "MALICIOUS_C2", log: "AZURE SENTINEL ALERT: Malicious C2 outbound traffic on vm-az-prod-web-01.", voice: "Step 1: Microsoft Defender / Azure Sentinel triggers alert for C2 network traffic." },
+                    { time: 3, step: "LOGIC_APP_TRIGGER", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "active-threat", tagOrchestrator: "AZURE_PLAYBOOK", targetStatus: "active-threat", tagTarget: "MALICIOUS_C2", log: "Azure Logic App Sentinel Playbook triggered incident handler.", voice: "Step 2: Azure Logic App Playbook ingests JSON alert and routes to containment engine." },
+                    { time: 6, step: "NSG_DENY_ALL", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "active-threat", tagTarget: "ISOLATING_NSG", log: "Detaching 'nsg-prod-web-eastus'... Attaching 'nsg-azure-quarantine-deny-all'.", voice: "Step 3: Network Security Group (NSG) swapped to DenyAll, instantly severing C2 connections." },
+                    { time: 9, step: "MANAGED_DISK_SNAP", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "contained", tagTarget: "DISK_CAPTURED", log: "Creating Azure Managed Disk snapshot 'azure-snap-forensic-vm-az-prod-web-01'.", voice: "Step 4: Azure Managed Disk snapshot created for offline forensic investigation." },
+                    { time: 12, step: "TAG_AND_LOCK", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "AZURE_QUARANTINE", log: "Applied SecurityStatus=QUARANTINED tags. Dispatched Teams & Sentinel alert.", voice: "Step 5: Resource tagged as QUARANTINED. Alert pushed to Microsoft Teams & Sentinel." },
+                    { time: 15, step: "CONTAINMENT_SUCCESSFUL", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "AZURE_SECURE", log: "SUCCESS: Azure VM successfully quarantined in 0.39 seconds.", voice: "Demonstration complete: Azure VM isolated across all network interfaces!" }
+                ]
             }
         };
 
@@ -821,6 +843,8 @@
             activeScenario = name;
             document.getElementById('scenarioCompute').classList.toggle('active', name === 'compute');
             document.getElementById('scenarioIAM').classList.toggle('active', name === 'iam');
+            document.getElementById('scenarioAzure').classList.toggle('active', name === 'azure');
+
             
             const target = scenarios[name];
             document.getElementById('targetName').innerText = target.targetName;

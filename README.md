@@ -1,22 +1,24 @@
-# Automated Cloud Incident Response Pipeline
+# Multi-Cloud Automated Incident Response Pipeline (AWS • GCP • Azure)
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Cloud Providers](https://img.shields.io/badge/Multi--Cloud-AWS%20%7C%20GCP%20%7C%20Azure-blue)
 ![Security Focus](https://img.shields.io/badge/Security-Automated--Containment-red)
-![Architecture](https://img.shields.io/badge/Orchestrator-Step--Functions%20%2F%20Workflows-blue)
+![Orchestration](https://img.shields.io/badge/Orchestration-Step--Functions%20%2F%20Workflows%20%2F%20Logic--Apps-purple)
 ![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-> Enterprise-grade cloud incident response system designed to achieve **zero-human-delay isolation** of compromised cloud infrastructure and credentials.
+> Unified multi-cloud incident response system designed to achieve **zero-human-delay isolation** of compromised cloud workloads and identities across **AWS, Google Cloud Platform (GCP), and Microsoft Azure**.
 
 ---
 
-## 🎬 Interactive Demo Video & POC Simulator
+## 🎬 Interactive Multi-Cloud Demo Video & POC Simulator
 
-Experience the live automated containment flow with our interactive proof-of-concept simulator built directly into this repository:
+Experience the live automated containment flow across AWS, GCP, and Azure with our interactive proof-of-concept simulator built directly into this repository:
 
-- 📺 **Interactive Demo App**: Open [`demo_video.html`](file:///c:/Users/SureshZatch/Desktop/AutomatedIncidentResponse/demo_video.html) in any modern browser to play the full sub-second isolation video simulation.
+- 📺 **Interactive Demo App**: Open [`demo_video.html`](file:///c:/Users/SureshZatch/Desktop/AutomatedIncidentResponse/demo_video.html) in any modern browser.
 - ⚡ **Attacker Dwell Time Reduction**: Visualized in real time (**45 minutes ➔ 0.38 seconds**).
-- 🎯 **Interactive Attack Scenarios**: Toggle between **EC2 Malware Network Isolation** and **IAM Credential Key Revocation**.
+- 🎯 **Multi-Cloud Scenarios**: Toggle between **AWS EC2 Malware Isolation**, **AWS IAM Key Revocation**, and **Azure VM NSG Lockdown & Disk Snapshot**.
+
 
 ```bash
 # Launch local demo preview server:
