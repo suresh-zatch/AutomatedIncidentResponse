@@ -1,0 +1,10 @@
+# Automated Multi-Cloud Incident Response Pipeline - Live Production Dependencies
+boto3>=1.28.0
+google-cloud-compute>=1.14.0
+google-cloud-iam>=2.12.0
+google-auth>=2.22.0
+azure-identity>=1.14.0
+azure-mgmt-compute>=30.0.0
+azure-mgmt-network>=23.0.0
+python-dotenv>=1.0.0
+requests>=2.31.0
