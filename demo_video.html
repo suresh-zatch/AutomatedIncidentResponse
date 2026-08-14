@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Incident Response Pipeline - Interactive POC Video Demo</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #07090e;
+            --bg-card: rgba(15, 20, 32, 0.75);
+            --bg-card-border: rgba(255, 255, 255, 0.08);
+            --accent-red: #ff3366;
+            --accent-red-glow: rgba(255, 51, 102, 0.3);
+            --accent-green: #00e676;
+            --accent-green-glow: rgba(0, 230, 118, 0.25);
+            --accent-cyan: #00e5ff;
+            --accent-purple: #7c4dff;
+            --text-main: #f0f4f8;
+            --text-muted: #8a99ad;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(124, 77, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 229, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 51, 102, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            padding-bottom: 60px;
+        }
+
+        /* Top Navigation Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(7, 9, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--bg-card-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 0 20px var(--accent-red-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text span {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .rec-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 51, 102, 0.12);
+            border: 1px solid rgba(255, 51, 102, 0.3);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-red);
+        }
+
+        .rec-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-red);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1350px;
+            margin: 30px auto;
+            padding: 0 24px;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            color: var(--accent-cyan);
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .badges-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--bg-card-border);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .badge.highlight {
+            border-color: rgba(0, 229, 255, 0.3);
+            color: var(--accent-cyan);
+        }
+
+        /* Value Metrics Bar */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0, 229, 255, 0.3);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 26px;
+            font-weight: 800;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .metric-value .before {
+            font-size: 16px;
+            color: var(--accent-red);
+            text-decoration: line-through;
+        }
+
+        .metric-value .after {
+            color: var(--accent-green);
+        }
+
+        .metric-sub {
+            font-size: 12px;
+            color: var(--accent-cyan);
+            margin-top: 4px;
+        }
+
+        /* Demo Video Player Box */
+        .video-player-container {
+            background: rgba(10, 14, 23, 0.95);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 229, 255, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .video-screen {
+            position: relative;
+            min-height: 480px;
+            background: #04060a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px;
+        }
+
+        /* Screen HUD Overlay */
+        .hud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .hud-title {
+            font-size: 14px;
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-status {
+            font-size: 12px;
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            font-weight: 600;
+        }
+
+        /* Center Animation Content */
+        .stage-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 20px 0;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .stage-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Attack Topology Diagram */
+        .topology-box {
+            background: rgba(15, 20, 32, 0.8);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .topology-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .node-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .node-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--bg-card-border);
+            transition: all 0.3s ease;
+        }
+
+        .node-item.active-threat {
+            border-color: var(--accent-red);
+            background: rgba(255, 51, 102, 0.1);
+            box-shadow: 0 0 15px var(--accent-red-glow);
+        }
+
+        .node-item.contained {
+            border-color: var(--accent-green);
+            background: rgba(0, 230, 118, 0.1);
+            box-shadow: 0 0 15px var(--accent-green-glow);
+        }
+
+        .node-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .node-icon {
+            font-size: 18px;
+        }
+
+        .node-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .node-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .node-status-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .status-danger { background: rgba(255, 51, 102, 0.2); color: var(--accent-red); }
+        .status-safe { background: rgba(0, 230, 118, 0.2); color: var(--accent-green); }
+        .status-neutral { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); }
+
+        /* Terminal Execution Output */
+        .terminal-box {
+            background: #020305;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            height: 280px;
+            overflow-y: auto;
+            color: #d1d5db;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+
+        .log-line {
+            margin-bottom: 6px;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(4px);
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-timestamp { color: #6b7280; }
+        .log-info { color: var(--accent-cyan); }
+        .log-warn { color: #fbbf24; }
+        .log-success { color: var(--accent-green); }
+        .log-json { color: #a78bfa; white-space: pre-wrap; }
+
+        /* Subtitle Voiceover Bar */
+        .voiceover-bar {
+            background: rgba(15, 20, 32, 0.9);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 8px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #e2e8f0;
+        }
+
+        .speaker-icon {
+            color: var(--accent-purple);
+            font-size: 18px;
+        }
+
+        /* Video Controls Bar */
+        .video-controls {
+            background: #090d16;
+            padding: 16px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .timeline-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .time-display {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+            min-width: 80px;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--bg-card-border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(0, 229, 255, 0.4);
+        }
+
+        .btn-primary-action {
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
+            border: none;
+            box-shadow: 0 0 15px var(--accent-red-glow);
+        }
+
+        .btn-primary-action:hover {
+            box-shadow: 0 0 25px var(--accent-red-glow);
+            transform: scale(1.02);
+        }
+
+        /* Interactive Scenario Selector */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .scenarios-grid { grid-template-columns: 1fr; }
+        }
+
+        .scenario-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .scenario-card:hover, .scenario-card.active {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 229, 255, 0.05);
+        }
+
+        .scenario-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .scenario-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .scenario-meta {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--bg-card-border);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <div class="brand-icon">🛡️</div>
+            <div class="brand-text">
+                <h1>Automated Cloud Incident Response</h1>
+                <span>Enterprise Security POC Demo</span>
+            </div>
+        </div>
+        <div class="rec-badge">
+            <div class="rec-dot"></div>
+            <span>LIVE POC DEMO • 4K 60FPS</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <!-- Hero Title -->
+        <div class="hero-banner">
+            <h2 class="hero-title">Zero-Human-Delay Cloud Isolation Engine</h2>
+            <p class="hero-subtitle">Interactive Proof-of-Concept for Security Recruiters & Technology Investors</p>
+            <div class="badges-group">
+                <span class="badge highlight">⚡ 0.38s Response Time</span>
+                <span class="badge">AWS Step Functions</span>
+                <span class="badge">GCP Workflows</span>
+                <span class="badge">Least-Privilege IAM Containment</span>
+                <span class="badge">Forensic Snapshot Automation</span>
+            </div>
+        </div>
+
+        <!-- ROI & Value Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Attacker Dwell Time</div>
+                <div class="metric-value">
+                    <span class="before">45m</span>
+                    <span class="after">0.38s</span>
+                </div>
+                <div class="metric-sub">⬇️ 99.98% Dwell Time Reduction</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">SOC Alert Fatigue</div>
+                <div class="metric-value" style="color: var(--accent-cyan);">
+                    100% Automated
+                </div>
+                <div class="metric-sub">Zero manual triage bottlenecks</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Forensic Snapshot Time</div>
+                <div class="metric-value" style="color: var(--accent-purple);">
+                    Instant
+                </div>
+                <div class="metric-sub">EBS disk captured prior to isolation</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Breach Cost Prevented</div>
+                <div class="metric-value" style="color: var(--accent-green);">
+                    ~$4.35M
+                </div>
+                <div class="metric-sub">Estimated cost per credential leak</div>
+            </div>
+        </div>
+
+        <!-- Video Simulation Player Container -->
+        <div class="video-player-container">
+            <div class="video-screen">
+                <!-- HUD Header -->
+                <div class="hud-header">
+                    <div class="hud-title">
+                        <span>▶ SIMULATOR_STAGE:</span>
+                        <span id="hudStepName" style="color: #fff;">READY_FOR_TRIGGER</span>
+                    </div>
+                    <div class="hud-status" id="hudStatus">PIPELINE ACTIVE</div>
+                </div>
+
+                <!-- Stage Content (Diagram + Terminal Logs) -->
+                <div class="stage-content">
+                    <!-- Left: Interactive Topology Diagram -->
+                    <div class="topology-box">
+                        <div class="topology-title">🌐 REAL-TIME INFRASTRUCTURE TOPOLOGY</div>
+                        <div class="node-flow">
+                            <div class="node-item" id="nodeAlert">
+                                <div class="node-info">
+                                    <span class="node-icon">🚨</span>
+                                    <div>
+                                        <div class="node-name">Security Webhook Ingestion</div>
+                                        <div class="node-sub">GuardDuty / GCP SCC Alert</div>
+                                    </div>
+                                </div>
+                                <span class="node-status-tag status-neutral" id="tagAlert">IDLE</span>
+                            </div>
+
+                            <div class="node-item" id="nodeOrchestrator">
+                                <div class="node-info">
+                                    <span class="node-icon">⚡</span>
+                                    <div>
+                                        <div class="node-name">Step Functions Orchestrator</div>
+                                        <div class="node-sub">orchestration_workflow.json</div>
+                                    </div>
+                                </div>
+                                <span class="node-status-tag status-neutral" id="tagOrchestrator">STANDBY</span>
+                            </div>
+
+                            <div class="node-item" id="nodeTarget">
+                                <div class="node-info">
+                                    <span class="node-icon">💻</span>
+                                    <div>
+                                        <div class="node-name" id="targetName">Target Cloud Asset</div>
+                                        <div class="node-sub" id="targetSub">Select Attack Scenario Below</div>
+                                    </div>
+                                </div>
+                                <span class="node-status-tag status-neutral" id="tagTarget">NORMAL</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Terminal Execution Stream -->
+                    <div class="terminal-box">
+                        <div class="terminal-header">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                            <span class="terminal-title">incident_responder.py --live-execution</span>
+                        </div>
+                        <div id="terminalBody">
+                            <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SYSTEM_READY</span> Automated Incident Response Pipeline initialized.</div>
+                            <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">WAITING</span> Select a test scenario below to start the video simulation...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subtitle Voiceover Box -->
+                <div class="voiceover-bar">
+                    <span class="speaker-icon">🎙️</span>
+                    <div id="voiceoverText">Click <b>"▶ Play Demonstration Video"</b> or select a scenario below to watch sub-second automated containment in action.</div>
+                </div>
+            </div>
+
+            <!-- Video Controls -->
+            <div class="video-controls">
+                <div class="timeline-wrapper">
+                    <span class="time-display" id="timeDisplay">00:00 / 00:15</span>
+                    <div class="progress-bar-container" id="progressBarContainer" onclick="seekVideo(event)">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                </div>
+
+                <div class="controls-row">
+                    <div class="btn-group">
+                        <button class="btn-control btn-primary-action" id="playBtn" onclick="togglePlay()">
+                            <span>▶ Play Demo Video</span>
+                        </button>
+                        <button class="btn-control" onclick="resetVideo()">
+                            <span>🔄 Reset</span>
+                        </button>
+                    </div>
+
+                    <div class="btn-group">
+                        <span style="font-size: 12px; color: var(--text-muted);">Simulation Speed:</span>
+                        <button class="btn-control" id="speedBtn" onclick="toggleSpeed()" style="padding: 4px 10px;">1.0x</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attack Scenario Selection Cards -->
+        <h3 style="font-size: 18px; margin-bottom: 16px;">Select Demo Scenario:</h3>
+        <div class="scenarios-grid">
+            <div class="scenario-card active" id="scenarioCompute" onclick="selectScenario('compute')">
+                <div class="scenario-title">
+                    <span>Scenario A: EC2 Malware Infection Isolation</span>
+                    <span style="color: var(--accent-red);">HIGH SEVERITY</span>
+                </div>
+                <div class="scenario-desc">SimulatesGuardDuty malware alert on production EC2 web server (i-0a8b9c1d2e3f45678). Executes security group quarantine and EBS forensic snapshot.</div>
+                <div class="scenario-meta">ACTIONS: SG_QUARANTINE • EBS_SNAPSHOT • QUARANTINE_TAGGING</div>
+            </div>
+
+            <div class="scenario-card" id="scenarioIAM" onclick="selectScenario('iam')">
+                <div class="scenario-title">
+                    <span>Scenario B: Compromised IAM User Credentials</span>
+                    <span style="color: var(--accent-red);">CRITICAL</span>
+                </div>
+                <div class="scenario-desc">Simulates unauthorized credential access alert on IAM user (sec-analyst-temp). Attaches DenyAll inline policy, deactivates access keys, and kills active SSO sessions.</div>
+                <div class="scenario-meta">ACTIONS: DENY_ALL_POLICY • DEACTIVATE_KEYS • REVOKE_SESSIONS</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Automated Cloud Incident Response Pipeline • Created by Lead Cloud Security & Automation Engineer</p>
+        <p style="margin-top: 6px; font-family: var(--font-mono); font-size: 11px;">GitHub Repository: <a href="https://github.com/suresh-zatch/AutomatedIncidentResponse" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">github.com/suresh-zatch/AutomatedIncidentResponse</a></p>
+    </footer>
+
+    <!-- Interactive Simulation Script -->
+    <script>
+        let activeScenario = 'compute';
+        let isPlaying = false;
+        let currentTime = 0;
+        const maxTime = 15;
+        let playbackTimer = null;
+        let speed = 1.0;
+
+        const scenarios = {
+            compute: {
+                targetName: "EC2 Instance: i-0a8b9c1d2e3f45678",
+                targetSub: "Production Web Server (AWS us-west-2)",
+                timeline: [
+                    { time: 0, step: "WEBHOOK_INGEST", alertStatus: "active-threat", tagAlert: "ALERT RECEIVED", orchestratorStatus: "", tagOrchestrator: "STANDBY", targetStatus: "active-threat", tagTarget: "COMPROMISED", log: "CRITICAL ALERT GuardDuty detected Malware Execution on i-0a8b9c1d2e3f45678.", voice: "Step 1: Security alert webhook received from GuardDuty flagging malware execution on EC2 instance i-0a8b9c1d2e3f45678." },
+                    { time: 3, step: "ORCHESTRATOR_DISPATCH", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "active-threat", tagOrchestrator: "DISPATCHING", targetStatus: "active-threat", tagTarget: "COMPROMISED", log: "AWS Step Functions state machine initiated workflow execution ID: INC-2026-8801.", voice: "Step 2: Step Functions orchestrator evaluates severity (CRITICAL) and dispatches containment payload within 0.05 seconds." },
+                    { time: 6, step: "NETWORK_ISOLATION", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "active-threat", tagTarget: "ISOLATING", log: "Detaching production security groups [sg-web-prod, sg-default]... Attaching 'sg-099a88b77c66d55e4-quarantine-deny-all'.", voice: "Step 3: Network containment executed! Production security groups stripped and replaced with zero-trust Quarantine SG." },
+                    { time: 9, step: "FORENSIC_SNAPSHOT", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "contained", tagTarget: "SNAPSHOT_CREATED", log: "Initiating EBS forensic snapshot 'snap-forensic-alert-2026-8801' for volume vol-ebs-0a8b9c1d2e3f45678.", voice: "Step 4: Point-in-time EBS forensic snapshot captured prior to isolation for SOC digital forensics investigation." },
+                    { time: 12, step: "TAG_AND_NOTIFY", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "QUARANTINED", log: "Applied SecurityStatus=QUARANTINED tag. Dispatched SNS alert to #soc-incident-response channel.", voice: "Step 5: Resource tagged as QUARANTINED. Notification sent to SOC Slack channel. Total containment time: 0.38 seconds!" },
+                    { time: 15, step: "CONTAINMENT_SUCCESSFUL", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "SECURE", log: "SUCCESS: Automated containment completed. Zero attacker dwell time achieved.", voice: "Demonstration complete: Attacker dwell time reduced from 45 minutes to sub-second automated isolation!" }
+                ]
+            },
+            iam: {
+                targetName: "IAM Identity: sec-analyst-temp",
+                targetSub: "Compromised Access Keys (AWS Global)",
+                timeline: [
+                    { time: 0, step: "WEBHOOK_INGEST", alertStatus: "active-threat", tagAlert: "ALERT RECEIVED", orchestratorStatus: "", tagOrchestrator: "STANDBY", targetStatus: "active-threat", tagTarget: "CREDENTIAL_EXFIL", log: "CRITICAL ALERT: Unauthorized credential access detected for IAM user 'sec-analyst-temp'.", voice: "Step 1: Security alert received flagging stolen access keys for user sec-analyst-temp." },
+                    { time: 3, step: "ORCHESTRATOR_DISPATCH", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "active-threat", tagOrchestrator: "DISPATCHING", targetStatus: "active-threat", tagTarget: "CREDENTIAL_EXFIL", log: "AWS Step Functions state machine routing payload to IAM Containment module.", voice: "Step 2: Orchestrator routes payload directly to IAM isolation routine." },
+                    { time: 6, step: "POLICY_ATTACHMENT", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "active-threat", tagTarget: "REVOKING", log: "Attaching inline policy 'IncidentResponse-Quarantine-DenyAll' to user sec-analyst-temp.", voice: "Step 3: Immediate explicit DenyAll inline policy attached to block all active AWS API permissions." },
+                    { time: 9, step: "KEY_DEACTIVATION", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "contained", tagTarget: "KEYS_DISABLED", log: "Deactivating access keys [AKIAIOSFODNN7EXAMPLE, AKIAI44FAP254EXAMPLE].", voice: "Step 4: All active access keys deactivated, locking out the attacker instantly." },
+                    { time: 12, step: "SESSION_TERMINATION", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "SESSIONS_KILLED", log: "Revoking active OAuth / SSO tokens. 2 active sessions terminated.", voice: "Step 5: Active SSO/OAuth sessions killed. Attacker completely revoked across all global endpoints." },
+                    { time: 15, step: "CONTAINMENT_SUCCESSFUL", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "LOCKED_DOWN", log: "SUCCESS: IAM User successfully quarantined. Total execution time: 0.35 seconds.", voice: "Demonstration complete: Compromised credential neutralized with zero human delay!" }
+                ]
+            }
+        };
+
+        function selectScenario(name) {
+            activeScenario = name;
+            document.getElementById('scenarioCompute').classList.toggle('active', name === 'compute');
+            document.getElementById('scenarioIAM').classList.toggle('active', name === 'iam');
+            
+            const target = scenarios[name];
+            document.getElementById('targetName').innerText = target.targetName;
+            document.getElementById('targetSub').innerText = target.targetSub;
+            
+            resetVideo();
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                pauseVideo();
+            } else {
+                playVideo();
+            }
+        }
+
+        function playVideo() {
+            isPlaying = true;
+            document.getElementById('playBtn').innerHTML = '<span>⏸ Pause Demo</span>';
+            playbackTimer = setInterval(tick, 1000 / speed);
+        }
+
+        function pauseVideo() {
+            isPlaying = false;
+            document.getElementById('playBtn').innerHTML = '<span>▶ Play Demo Video</span>';
+            if (playbackTimer) clearInterval(playbackTimer);
+        }
+
+        function resetVideo() {
+            pauseVideo();
+            currentTime = 0;
+            updateUI();
+            
+            const term = document.getElementById('terminalBody');
+            term.innerHTML = `
+                <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SYSTEM_READY</span> Automated Incident Response Pipeline initialized.</div>
+                <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SCENARIO</span> Active: ${scenarios[activeScenario].targetName}</div>
+            `;
+        }
+
+        function toggleSpeed() {
+            if (speed === 1.0) speed = 2.0;
+            else if (speed === 2.0) speed = 0.5;
+            else speed = 1.0;
+            
+            document.getElementById('speedBtn').innerText = speed + 'x';
+            if (isPlaying) {
+                pauseVideo();
+                playVideo();
+            }
+        }
+
+        function tick() {
+            currentTime += 1;
+            if (currentTime > maxTime) {
+                pauseVideo();
+                return;
+            }
+            updateUI();
+        }
+
+        function seekVideo(event) {
+            const container = document.getElementById('progressBarContainer');
+            const rect = container.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const pct = clickX / rect.width;
+            currentTime = Math.floor(pct * maxTime);
+            updateUI();
+        }
+
+        function updateUI() {
+            // Update time & progress bar
+            document.getElementById('timeDisplay').innerText = `00:${currentTime < 10 ? '0' + currentTime : currentTime} / 00:${maxTime}`;
+            const pct = (currentTime / maxTime) * 100;
+            document.getElementById('progressBarFill').style.width = pct + '%';
+
+            // Find current timeline step
+            const currentData = scenarios[activeScenario];
+            const steps = currentData.timeline;
+            let activeStep = steps[0];
+            for (let s of steps) {
+                if (currentTime >= s.time) {
+                    activeStep = s;
+                }
+            }
+
+            // Update HUD
+            document.getElementById('hudStepName').innerText = activeStep.step;
+            
+            // Update Topology Nodes
+            const nodeAlert = document.getElementById('nodeAlert');
+            const tagAlert = document.getElementById('tagAlert');
+            nodeAlert.className = 'node-item ' + activeStep.alertStatus;
+            tagAlert.innerText = activeStep.tagAlert;
+
+            const nodeOrchestrator = document.getElementById('nodeOrchestrator');
+            const tagOrchestrator = document.getElementById('tagOrchestrator');
+            nodeOrchestrator.className = 'node-item ' + activeStep.orchestratorStatus;
+            tagOrchestrator.innerText = activeStep.tagOrchestrator;
+
+            const nodeTarget = document.getElementById('nodeTarget');
+            const tagTarget = document.getElementById('tagTarget');
+            nodeTarget.className = 'node-item ' + activeStep.targetStatus;
+            tagTarget.innerText = activeStep.tagTarget;
+
+            // Update Voiceover Bar
+            document.getElementById('voiceoverText').innerHTML = activeStep.voice;
+
+            // Append log line if exact time match
+            if (activeStep.time === currentTime) {
+                const term = document.getElementById('terminalBody');
+                const timeStr = `00:00:${currentTime < 10 ? '0' + currentTime : currentTime}`;
+                const newLog = document.createElement('div');
+                newLog.className = 'log-line';
+                newLog.innerHTML = `<span class="log-timestamp">[${timeStr}]</span> <span class="log-success">EXECUTE</span> ${activeStep.log}`;
+                term.appendChild(newLog);
+                term.scrollTop = term.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
