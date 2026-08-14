@@ -9,6 +9,11 @@ import json
 import sys
 from incident_responder import MultiCloudIncidentResponder
 
+# Ensure UTF-8 output encoding for Windows compatibility
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+
 
 def main():
     print("==========================================================================")
