@@ -1,0 +1,98 @@
+{
+  "Comment": "Enterprise Automated Incident Response Pipeline State Machine",
+  "StartAt": "ParseSecurityAlert",
+  "States": {
+    "ParseSecurityAlert": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:123456789012:function:IncidentAlertParser",
+        "Payload.$": "$"
+      },
+      "ResultPath": "$.parsedAlert",
+      "Next": "EvaluateSeverity"
+    },
+    "EvaluateSeverity": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Or": [
+            { "Variable": "$.parsedAlert.severity", "StringEquals": "CRITICAL" },
+            { "Variable": "$.parsedAlert.severity", "StringEquals": "HIGH" }
+          ],
+          "Next": "DetermineResourceType"
+        }
+      ],
+      "Default": "LogLowSeverityAndPass"
+    },
+    "LogLowSeverityAndPass": {
+      "Type": "Pass",
+      "Result": "Alert severity below threshold for automated isolation. Forwarded to SOC queue.",
+      "End": true
+    },
+    "DetermineResourceType": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.parsedAlert.resource_type",
+          "StringEquals": "iam",
+          "Next": "IsolateCompromisedIAMUser"
+        },
+        {
+          "Or": [
+            { "Variable": "$.parsedAlert.resource_type", "StringEquals": "compute" },
+            { "Variable": "$.parsedAlert.resource_type", "StringEquals": "ec2" }
+          ],
+          "Next": "IsolateCompromisedComputeInstance"
+        }
+      ],
+      "Default": "UnknownResourceTypeHandler"
+    },
+    "IsolateCompromisedIAMUser": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:123456789012:function:IncidentResponder",
+        "Payload": {
+          "action": "contain_iam_user",
+          "incident.$": "$.parsedAlert"
+        }
+      },
+      "ResultPath": "$.containmentResult",
+      "Next": "SendSOCTeamNotification"
+    },
+    "IsolateCompromisedComputeInstance": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:123456789012:function:IncidentResponder",
+        "Payload": {
+          "action": "contain_compute_instance",
+          "incident.$": "$.parsedAlert"
+        }
+      },
+      "ResultPath": "$.containmentResult",
+      "Next": "SendSOCTeamNotification"
+    },
+    "UnknownResourceTypeHandler": {
+      "Type": "Fail",
+      "Error": "UnsupportedResourceType",
+      "Cause": "The resource type specified in the alert is not supported for automated isolation."
+    },
+    "SendSOCTeamNotification": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:123456789012:SOC-Incident-Response-Alerts",
+        "Message": {
+          "Title": "AUTOMATED CONTAINMENT EXECUTED",
+          "IncidentID.$": "$.containmentResult.Payload.incident_id",
+          "TargetResource.$": "$.containmentResult.Payload.target_resource",
+          "Status.$": "$.containmentResult.Payload.status",
+          "Details.$": "$.containmentResult.Payload"
+        }
+      },
+      "End": true
+    }
+  }
+}

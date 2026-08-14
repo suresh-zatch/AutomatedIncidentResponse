@@ -1,0 +1,118 @@
+=== AUTOMATED INCIDENT RESPONSE CONTAINMENT DEMO OUTPUT ===
+Generated: 2026-08-14
+Pipeline Status: ALL SIMULATION ALERTS AUTOMATICALLY CONTAINED
+
+{
+  "pipeline_version": "1.0.0-enterprise",
+  "simulation_execution_time": "2026-08-14T07:59:00Z",
+  "containment_engine": "incident_responder.py",
+  "orchestration_workflow": "orchestration_workflow.json",
+  "alerts_processed_count": 2,
+  "results": [
+    {
+      "trigger_payload": {
+        "id": "ALERT-2026-8801",
+        "severity": "CRITICAL",
+        "type": "MALWARE_EXECUTION_DETECTED",
+        "resource_type": "compute",
+        "resource_id": "i-0a8b9c1d2e3f45678",
+        "account_id": "992817345019",
+        "region": "us-west-2"
+      },
+      "containment_result": {
+        "incident_id": "ALERT-2026-8801",
+        "containment_type": "COMPUTE_NETWORK_ISOLATION",
+        "target_resource": "i-0a8b9c1d2e3f45678",
+        "status": "SUCCESSFUL_CONTAINMENT",
+        "steps": [
+          {
+            "action": "modify_instance_security_groups",
+            "target": "i-0a8b9c1d2e3f45678",
+            "detached_security_groups": [
+              "sg-0123456789abcdef0-web-prod",
+              "sg-0fedcba9876543210-default"
+            ],
+            "attached_security_group": "sg-099a88b77c66d55e4-quarantine-deny-all",
+            "inbound_rules": "DENY_ALL",
+            "outbound_rules": "DENY_ALL",
+            "status": "EXECUTED_SUCCESS"
+          },
+          {
+            "action": "create_forensic_snapshot",
+            "target_volume": "vol-ebs-0a8b9c1d2e3f45678",
+            "snapshot_id": "snap-forensic-alert-2026-8801-i-0a8b9c1d2e3f45678",
+            "description": "Forensic snapshot created by Automated Incident Response for ALERT-2026-8801",
+            "status": "EXECUTED_SUCCESS"
+          },
+          {
+            "action": "tag_resource",
+            "target": "i-0a8b9c1d2e3f45678",
+            "tags_added": {
+              "SecurityStatus": "QUARANTINED",
+              "IncidentID": "ALERT-2026-8801",
+              "Isolator": "AutomatedIncidentResponsePipeline"
+            },
+            "status": "EXECUTED_SUCCESS"
+          }
+        ],
+        "timestamp": "2026-08-14T02:29:28.197137+00:00"
+      }
+    },
+    {
+      "trigger_payload": {
+        "id": "ALERT-2026-8802",
+        "severity": "CRITICAL",
+        "type": "UNAUTHORIZED_CREDENTIAL_EXFILTRATION",
+        "resource_type": "iam",
+        "resource_id": "sec-analyst-temp",
+        "account_id": "992817345019",
+        "region": "global"
+      },
+      "containment_result": {
+        "incident_id": "ALERT-2026-8802",
+        "containment_type": "IAM_USER_ISOLATION",
+        "target_resource": "sec-analyst-temp",
+        "status": "SUCCESSFUL_CONTAINMENT",
+        "steps": [
+          {
+            "action": "attach_user_policy",
+            "target": "sec-analyst-temp",
+            "policy_name": "IncidentResponse-Quarantine-DenyAll-ALERT-2026-8802",
+            "policy_document": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Deny",
+                  "Action": "*",
+                  "Resource": "*",
+                  "Condition": {
+                    "DateLessThan": {
+                      "aws:TokenIssueTime": "2026-08-14T02:29:28.198025+00:00"
+                    }
+                  }
+                }
+              ]
+            },
+            "status": "EXECUTED_SUCCESS"
+          },
+          {
+            "action": "disable_access_keys",
+            "target": "sec-analyst-temp",
+            "keys_deactivated": [
+              "AKIAIOSFODNN7EXAMPLE",
+              "AKIAI44FAP254EXAMPLE"
+            ],
+            "status": "EXECUTED_SUCCESS"
+          },
+          {
+            "action": "revoke_active_sessions",
+            "target": "sec-analyst-temp",
+            "sessions_revoked": 2,
+            "status": "EXECUTED_SUCCESS"
+          }
+        ],
+        "timestamp": "2026-08-14T02:29:28.198025+00:00"
+      }
+    }
+  ]
+}
