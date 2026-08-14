@@ -69,19 +69,25 @@ The verifier will test your active connection to:
 
 ---
 
-## 🎬 Interactive Multi-Cloud Demo Video & POC Simulator
+## 🎬 Interactive Multi-Cloud Demo & POC Simulator
 
-Experience the live automated containment flow across AWS, GCP, and Azure with our interactive proof-of-concept simulator built directly into this repository:
+Experience the live automated containment flow across AWS, GCP, and Azure with our interactive proof-of-concept simulator. The demo features two modes:
+1. **Simulated Demo Video**: A hyper-realistic, pre-recorded 4K simulation of the pipeline in action.
+2. **Live Interactive Sandbox**: A real-time web UI that connects directly to the Python backend (`server.py`), allowing you to manually trigger containment events and watch the JSON results stream live.
 
-- 📺 **Interactive Demo App**: Open [`demo_video.html`](file:///c:/Users/SureshZatch/Desktop/AutomatedIncidentResponse/demo_video.html) in any modern browser.
-- ⚡ **Attacker Dwell Time Reduction**: Visualized in real time (**45 minutes ➔ 0.38 seconds**).
-- 🎯 **Multi-Cloud Scenarios**: Toggle between **AWS EC2 Malware Isolation**, **AWS IAM Key Revocation**, and **Azure VM NSG Lockdown & Disk Snapshot**.
-- 🎥 **1-Click Video Recording**: Click **"Record & Download Demo Video (.webm)"** to generate a downloadable video presentation file!
+### Launching the Demo
+
+To run the interactive sandbox, you must start both the Flask API backend and the local HTTP server:
 
 ```bash
-# Launch local demo preview server:
+# 1. Start the Flask API backend (runs on port 5001)
+python server.py
+
+# 2. Start the local HTTP server (runs on port 8000)
 python -m http.server 8000
-# Open http://localhost:8000/demo_video.html in your browser!
+
+# 3. Open the Demo Dashboard in your browser:
+# http://localhost:8000/demo_video.html
 ```
 
 ---
@@ -152,9 +158,11 @@ AutomatedIncidentResponse/
 ├── test_manual.py            # Interactive Multi-Cloud Manual Testing CLI Bench
 ├── simulate_alert.py         # Batch Multi-Cloud Integration Test Suite
 ├── orchestration_workflow.json # AWS Step Functions orchestration state machine
-├── demo_video.html           # Interactive 4K Demo Video Player & WebM Exporter
+├── server.py                 # Flask REST API backend for the interactive demo UI
+├── demo_video.html           # Unified Demo Dashboard Hub
+├── demo_interactive.html     # Live Python-backed interactive terminal UI
+├── demo_simulated.html       # Auto-playing 4K simulation demo animation
 ├── demo_output.txt           # Captured multi-cloud simulation execution logs
-├── tasks.md                  # Task roadmap & implementation progress
 ├── requirements.txt          # Python cloud SDK dependencies (boto3, google-cloud, azure-mgmt)
 ├── .env.example              # Environment variables template for cloud credentials
 └── README.md                 # Production documentation & deployment guide
