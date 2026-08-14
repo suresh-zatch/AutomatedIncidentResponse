@@ -25,6 +25,7 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
       "containment_result": {
         "incident_id": "ALERT-AWS-8801",
         "cloud_provider": "AWS",
+        "execution_mode": "SIMULATION_DRY_RUN",
         "containment_type": "AWS_COMPUTE_ISOLATION",
         "target_resource": "i-0a8b9c1d2e3f45678",
         "status": "SUCCESSFUL_CONTAINMENT",
@@ -32,31 +33,25 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
           {
             "action": "aws_ec2_modify_security_groups",
             "target": "i-0a8b9c1d2e3f45678",
-            "detached_security_groups": [
-              "sg-0123456789abcdef0-web-prod"
-            ],
-            "attached_security_group": "sg-099a88b77c66d55e4-quarantine-deny-all",
-            "inbound_rules": "DENY_ALL",
-            "outbound_rules": "DENY_ALL",
-            "status": "EXECUTED_SUCCESS"
+            "attached_sg": "sg-099a88b77c66d55e4-quarantine-deny-all",
+            "status": "DRY_RUN_SUCCESS"
           },
           {
             "action": "aws_ec2_create_snapshot",
             "target_volume": "vol-ebs-0a8b9c1d2e3f45678",
             "snapshot_id": "snap-aws-forensic-alert-aws-8801",
-            "status": "EXECUTED_SUCCESS"
+            "status": "DRY_RUN_SUCCESS"
           },
           {
             "action": "aws_ec2_tag_resource",
             "target": "i-0a8b9c1d2e3f45678",
             "tags": {
-              "SecurityStatus": "QUARANTINED",
-              "IncidentID": "ALERT-AWS-8801"
+              "SecurityStatus": "QUARANTINED"
             },
-            "status": "EXECUTED_SUCCESS"
+            "status": "DRY_RUN_SUCCESS"
           }
         ],
-        "timestamp": "2026-08-14T02:47:27.362664+00:00"
+        "timestamp": "2026-08-14T03:13:57.128288+00:00"
       }
     },
     {
@@ -73,6 +68,7 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
       "containment_result": {
         "incident_id": "ALERT-GCP-8802",
         "cloud_provider": "GCP",
+        "execution_mode": "SIMULATION_DRY_RUN",
         "containment_type": "GCP_IAM_ISOLATION",
         "target_resource": "svc-deploy@gcp-prod.iam.gserviceaccount.com",
         "status": "SUCCESSFUL_CONTAINMENT",
@@ -80,10 +76,7 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
           {
             "action": "gcp_iam_disable_service_account_keys",
             "target": "svc-deploy@gcp-prod.iam.gserviceaccount.com",
-            "keys_disabled": [
-              "projects/gcp-prod/serviceAccounts/key-99128"
-            ],
-            "status": "EXECUTED_SUCCESS"
+            "status": "DRY_RUN_SUCCESS"
           },
           {
             "action": "gcp_iam_revoke_iam_roles",
@@ -92,16 +85,15 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
               "roles/editor",
               "roles/owner"
             ],
-            "status": "EXECUTED_SUCCESS"
+            "status": "DRY_RUN_SUCCESS"
           },
           {
             "action": "gcp_iam_revoke_oauth_tokens",
             "target": "svc-deploy@gcp-prod.iam.gserviceaccount.com",
-            "tokens_invalidated": 3,
-            "status": "EXECUTED_SUCCESS"
+            "status": "DRY_RUN_SUCCESS"
           }
         ],
-        "timestamp": "2026-08-14T02:47:27.363020+00:00"
+        "timestamp": "2026-08-14T03:13:57.128288+00:00"
       }
     },
     {
@@ -118,6 +110,7 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
       "containment_result": {
         "incident_id": "ALERT-AZURE-8803",
         "cloud_provider": "AZURE",
+        "execution_mode": "SIMULATION_DRY_RUN",
         "containment_type": "AZURE_COMPUTE_ISOLATION",
         "target_resource": "vm-az-prod-web-01",
         "status": "SUCCESSFUL_CONTAINMENT",
@@ -125,29 +118,17 @@ Status: ALL MULTI-CLOUD ALERTS AUTOMATICALLY CONTAINED (AWS + GCP + AZURE)
           {
             "action": "azure_vm_associate_network_security_group",
             "target": "vm-az-prod-web-01",
-            "detached_nsg": "nsg-prod-web-eastus",
-            "attached_quarantine_nsg": "nsg-azure-quarantine-deny-all",
-            "inbound_rules": "DENY_ALL",
-            "outbound_rules": "DENY_ALL",
-            "status": "EXECUTED_SUCCESS"
+            "attached_nsg": "nsg-azure-quarantine-deny-all",
+            "status": "DRY_RUN_SUCCESS"
           },
           {
             "action": "azure_vm_create_managed_disk_snapshot",
-            "target_os_disk": "disk-os-vm-az-prod-web-01",
+            "target_vm": "vm-az-prod-web-01",
             "snapshot_id": "azure-snap-forensic-alert-azure-8803",
-            "status": "EXECUTED_SUCCESS"
-          },
-          {
-            "action": "azure_vm_apply_resource_tags",
-            "target": "vm-az-prod-web-01",
-            "tags": {
-              "SecurityStatus": "QUARANTINED",
-              "IncidentID": "ALERT-AZURE-8803"
-            },
-            "status": "EXECUTED_SUCCESS"
+            "status": "DRY_RUN_SUCCESS"
           }
         ],
-        "timestamp": "2026-08-14T02:47:27.363154+00:00"
+        "timestamp": "2026-08-14T03:13:57.128288+00:00"
       }
     }
   ]

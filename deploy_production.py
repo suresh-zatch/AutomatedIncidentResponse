@@ -6,9 +6,7 @@ Verifies cloud credentials, IAM permissions, and SDK installations for AWS, GCP,
 prior to live production deployment.
 """
 
-import os
 import sys
-import json
 
 # Ensure UTF-8 output encoding for Windows compatibility
 if hasattr(sys.stdout, 'reconfigure'):
@@ -50,7 +48,7 @@ def verify_azure():
     print("[3/3] Verifying Azure Production Credentials & SDK...")
     try:
         from azure.identity import DefaultAzureCredential
-        cred = DefaultAzureCredential()
+        _ = DefaultAzureCredential()
         print("  [SUCCESS] Azure SDK Installed & DefaultAzureCredential initialized.")
         return True
     except ImportError:
@@ -65,11 +63,11 @@ def main():
     print("==========================================================================")
     print(" MULTI-CLOUD LIVE PRODUCTION PRE-FLIGHT VERIFIER")
     print("==========================================================================")
-    
+
     aws_ok = verify_aws()
     gcp_ok = verify_gcp()
     azure_ok = verify_azure()
-    
+
     print("\n--------------------------------------------------------------------------")
     print("PRODUCTION READINESS SUMMARY:")
     print("--------------------------------------------------------------------------")
@@ -77,7 +75,7 @@ def main():
     print(f"  * GCP   Production Mode: {'READY (LIVE)' if gcp_ok else 'SIMULATION / DRY-RUN FALLBACK'}")
     print(f"  * AZURE Production Mode: {'READY (LIVE)' if azure_ok else 'SIMULATION / DRY-RUN FALLBACK'}")
     print("--------------------------------------------------------------------------")
-    
+
     print("\nTo enable Live Production Mode on any cloud platform:")
     print("  1. Install SDKs: pip install -r requirements.txt")
     print("  2. Copy template: cp .env.example .env")

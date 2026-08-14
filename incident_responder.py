@@ -16,27 +16,24 @@ import datetime
 import uuid
 import sys
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 # Try importing live cloud SDKs gracefully
 try:
     import boto3
-    from botocore.exceptions import BotoCoreError, ClientError
     BOTO3_AVAILABLE = True
 except ImportError:
     BOTO3_AVAILABLE = False
 
 try:
-    from google.cloud import compute_v1
-    from google.oauth2 import service_account
+    import google.cloud.compute_v1  # noqa: F401 - availability probe
     GCP_SDK_AVAILABLE = True
 except ImportError:
     GCP_SDK_AVAILABLE = False
 
 try:
-    from azure.identity import DefaultAzureCredential, ClientSecretCredential
-    from azure.mgmt.compute import ComputeManagementClient
-    from azure.mgmt.network import NetworkManagementClient
+    import azure.identity  # noqa: F401 - availability probe
+    import azure.mgmt.compute  # noqa: F401 - availability probe
     AZURE_SDK_AVAILABLE = True
 except ImportError:
     AZURE_SDK_AVAILABLE = False
@@ -81,7 +78,7 @@ class MultiCloudIncidentResponder:
         """Normalize security alerts into unified schema."""
         incident_id = alert_payload.get("id", f"INC-{uuid.uuid4().hex[:8].upper()}")
         cloud_provider = alert_payload.get("cloud_provider", "aws").lower()
-        severity = alert_payload.get("severity", "CRITICAL").upper()
+        severity = (alert_payload.get("severity") or "CRITICAL").upper()
         alert_type = alert_payload.get("type", "UNKNOWN_THREAT")
         resource_type = alert_payload.get("resource_type", "compute").lower()
         resource_id = alert_payload.get("resource_id", "unknown-resource")
