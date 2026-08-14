@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automated Incident Response Pipeline - Interactive POC Video Demo</title>
+    <title>Automated Incident Response Pipeline - 4K Video Demo & POC Simulator</title>
     <!-- Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,12 +11,12 @@
     <style>
         :root {
             --bg-primary: #07090e;
-            --bg-card: rgba(15, 20, 32, 0.75);
+            --bg-card: rgba(15, 20, 32, 0.85);
             --bg-card-border: rgba(255, 255, 255, 0.08);
             --accent-red: #ff3366;
-            --accent-red-glow: rgba(255, 51, 102, 0.3);
+            --accent-red-glow: rgba(255, 51, 102, 0.35);
             --accent-green: #00e676;
-            --accent-green-glow: rgba(0, 230, 118, 0.25);
+            --accent-green-glow: rgba(0, 230, 118, 0.3);
             --accent-cyan: #00e5ff;
             --accent-purple: #7c4dff;
             --text-main: #f0f4f8;
@@ -45,13 +45,12 @@
             padding-bottom: 60px;
         }
 
-        /* Top Navigation Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 40px;
-            background: rgba(7, 9, 14, 0.85);
+            background: rgba(7, 9, 14, 0.9);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--bg-card-border);
             position: sticky;
@@ -66,47 +65,48 @@
         }
 
         .brand-icon {
-            width: 38px;
-            height: 38px;
+            width: 42px;
+            height: 42px;
             background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 18px;
+            font-size: 20px;
             box-shadow: 0 0 20px var(--accent-red-glow);
         }
 
         .brand-text h1 {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 800;
             letter-spacing: -0.02em;
         }
 
         .brand-text span {
             font-size: 12px;
-            color: var(--text-muted);
+            color: var(--accent-cyan);
             text-transform: uppercase;
             letter-spacing: 0.08em;
+            font-weight: 600;
         }
 
         .rec-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: rgba(255, 51, 102, 0.12);
-            border: 1px solid rgba(255, 51, 102, 0.3);
-            padding: 6px 14px;
+            border: 1px solid rgba(255, 51, 102, 0.4);
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--accent-red);
         }
 
         .rec-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background-color: var(--accent-red);
             border-radius: 50%;
             animation: pulse 1.5s infinite;
@@ -114,36 +114,35 @@
 
         @keyframes pulse {
             0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 0.3; transform: scale(0.85); }
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Container Layout */
         .container {
             max-width: 1350px;
             margin: 30px auto;
             padding: 0 24px;
         }
 
-        /* Hero Banner */
         .hero-banner {
             text-align: center;
             margin-bottom: 30px;
         }
 
         .hero-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 800;
             background: linear-gradient(135deg, #ffffff 30%, var(--text-muted) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
+            letter-spacing: -0.03em;
         }
 
         .hero-subtitle {
             color: var(--accent-cyan);
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 16px;
         }
 
@@ -157,16 +156,17 @@
         .badge {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--bg-card-border);
-            padding: 4px 12px;
-            border-radius: 6px;
+            padding: 6px 14px;
+            border-radius: 8px;
             font-size: 12px;
             color: var(--text-muted);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .badge.highlight {
-            border-color: rgba(0, 229, 255, 0.3);
+            border-color: rgba(0, 229, 255, 0.4);
             color: var(--accent-cyan);
+            background: rgba(0, 229, 255, 0.08);
         }
 
         /* Value Metrics Bar */
@@ -197,6 +197,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 6px;
+            font-weight: 600;
         }
 
         .metric-value {
@@ -221,15 +222,16 @@
             font-size: 12px;
             color: var(--accent-cyan);
             margin-top: 4px;
+            font-weight: 500;
         }
 
-        /* Demo Video Player Box */
+        /* Video Stage Frame */
         .video-player-container {
             background: rgba(10, 14, 23, 0.95);
-            border: 1px solid rgba(0, 229, 255, 0.25);
+            border: 1px solid rgba(0, 229, 255, 0.3);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 229, 255, 0.1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(0, 229, 255, 0.15);
             margin-bottom: 30px;
             position: relative;
         }
@@ -244,7 +246,6 @@
             padding: 24px;
         }
 
-        /* Screen HUD Overlay */
         .hud-header {
             display: flex;
             justify-content: space-between;
@@ -260,19 +261,19 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 600;
         }
 
         .hud-status {
             font-size: 12px;
-            background: rgba(0, 230, 118, 0.1);
+            background: rgba(0, 230, 118, 0.12);
             color: var(--accent-green);
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: 1px solid rgba(0, 230, 118, 0.3);
-            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            font-weight: 700;
         }
 
-        /* Center Animation Content */
         .stage-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -282,27 +283,23 @@
         }
 
         @media (max-width: 900px) {
-            .stage-content {
-                grid-template-columns: 1fr;
-            }
+            .stage-content { grid-template-columns: 1fr; }
         }
 
-        /* Attack Topology Diagram */
         .topology-box {
-            background: rgba(15, 20, 32, 0.8);
+            background: rgba(15, 20, 32, 0.9);
             border: 1px solid var(--bg-card-border);
             border-radius: 12px;
             padding: 20px;
-            min-height: 280px;
+            min-height: 290px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
         }
 
         .topology-title {
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-muted);
             margin-bottom: 16px;
         }
@@ -310,7 +307,7 @@
         .node-flow {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         .node-item {
@@ -326,13 +323,13 @@
 
         .node-item.active-threat {
             border-color: var(--accent-red);
-            background: rgba(255, 51, 102, 0.1);
+            background: rgba(255, 51, 102, 0.12);
             box-shadow: 0 0 15px var(--accent-red-glow);
         }
 
         .node-item.contained {
             border-color: var(--accent-green);
-            background: rgba(0, 230, 118, 0.1);
+            background: rgba(0, 230, 118, 0.12);
             box-shadow: 0 0 15px var(--accent-green-glow);
         }
 
@@ -342,13 +339,11 @@
             gap: 12px;
         }
 
-        .node-icon {
-            font-size: 18px;
-        }
+        .node-icon { font-size: 20px; }
 
         .node-name {
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .node-sub {
@@ -359,8 +354,8 @@
 
         .node-status-tag {
             font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
+            font-weight: 800;
+            padding: 3px 8px;
             border-radius: 4px;
             text-transform: uppercase;
         }
@@ -369,7 +364,6 @@
         .status-safe { background: rgba(0, 230, 118, 0.2); color: var(--accent-green); }
         .status-neutral { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); }
 
-        /* Terminal Execution Output */
         .terminal-box {
             background: #020305;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -377,7 +371,7 @@
             padding: 16px;
             font-family: var(--font-mono);
             font-size: 12px;
-            height: 280px;
+            height: 290px;
             overflow-y: auto;
             color: #d1d5db;
         }
@@ -416,56 +410,54 @@
 
         .log-timestamp { color: #6b7280; }
         .log-info { color: var(--accent-cyan); }
-        .log-warn { color: #fbbf24; }
         .log-success { color: var(--accent-green); }
-        .log-json { color: #a78bfa; white-space: pre-wrap; }
 
-        /* Subtitle Voiceover Bar */
         .voiceover-bar {
-            background: rgba(15, 20, 32, 0.9);
+            background: rgba(15, 20, 32, 0.95);
             border: 1px solid var(--bg-card-border);
-            border-radius: 8px;
-            padding: 12px 18px;
+            border-radius: 10px;
+            padding: 14px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-size: 14px;
-            color: #e2e8f0;
+            color: #f1f5f9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .speaker-icon {
             color: var(--accent-purple);
-            font-size: 18px;
+            font-size: 20px;
         }
 
-        /* Video Controls Bar */
         .video-controls {
             background: #090d16;
-            padding: 16px 24px;
+            padding: 18px 24px;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .timeline-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .time-display {
             font-family: var(--font-mono);
             font-size: 12px;
             color: var(--text-muted);
-            min-width: 80px;
+            min-width: 90px;
+            font-weight: 600;
         }
 
         .progress-bar-container {
             flex: 1;
-            height: 8px;
+            height: 10px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: 5px;
             position: relative;
             cursor: pointer;
             overflow: hidden;
@@ -475,7 +467,7 @@
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
-            border-radius: 4px;
+            border-radius: 5px;
             transition: width 0.1s linear;
         }
 
@@ -483,6 +475,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .btn-group {
@@ -495,10 +489,10 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--bg-card-border);
             color: var(--text-main);
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -514,24 +508,32 @@
         .btn-primary-action {
             background: linear-gradient(135deg, var(--accent-red), var(--accent-purple));
             border: none;
-            box-shadow: 0 0 15px var(--accent-red-glow);
+            box-shadow: 0 0 20px var(--accent-red-glow);
         }
 
         .btn-primary-action:hover {
-            box-shadow: 0 0 25px var(--accent-red-glow);
+            box-shadow: 0 0 30px var(--accent-red-glow);
             transform: scale(1.02);
         }
 
-        /* Interactive Scenario Selector */
-        .scenarios-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: 24px;
+        .btn-export-video {
+            background: linear-gradient(135deg, #00c853, #00e5ff);
+            border: none;
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.3);
         }
 
-        @media (max-width: 768px) {
-            .scenarios-grid { grid-template-columns: 1fr; }
+        .btn-export-video:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.5);
+        }
+
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .scenario-card {
@@ -545,7 +547,7 @@
 
         .scenario-card:hover, .scenario-card.active {
             border-color: var(--accent-cyan);
-            background: rgba(0, 229, 255, 0.05);
+            background: rgba(0, 229, 255, 0.06);
         }
 
         .scenario-title {
@@ -567,9 +569,9 @@
             font-size: 11px;
             font-family: var(--font-mono);
             color: var(--accent-cyan);
+            font-weight: 600;
         }
 
-        /* Footer */
         footer {
             margin-top: 50px;
             text-align: center;
@@ -588,7 +590,7 @@
             <div class="brand-icon">🛡️</div>
             <div class="brand-text">
                 <h1>Automated Cloud Incident Response</h1>
-                <span>Enterprise Security POC Demo</span>
+                <span>Multi-Cloud Proof-of-Concept Pitch</span>
             </div>
         </div>
         <div class="rec-badge">
@@ -602,14 +604,15 @@
 
         <!-- Hero Title -->
         <div class="hero-banner">
-            <h2 class="hero-title">Zero-Human-Delay Cloud Isolation Engine</h2>
-            <p class="hero-subtitle">Interactive Proof-of-Concept for Security Recruiters & Technology Investors</p>
+            <h2 class="hero-title">Zero-Human-Delay Multi-Cloud Isolation Engine</h2>
+            <p class="hero-subtitle">Interactive Pitch & Demonstration for Security Recruiters & Technology Investors</p>
             <div class="badges-group">
-                <span class="badge highlight">⚡ 0.38s Response Time</span>
+                <span class="badge highlight">⚡ 0.38s Response SLA</span>
                 <span class="badge">AWS Step Functions</span>
                 <span class="badge">GCP Workflows</span>
-                <span class="badge">Least-Privilege IAM Containment</span>
-                <span class="badge">Forensic Snapshot Automation</span>
+                <span class="badge">Azure Logic Apps</span>
+                <span class="badge">Least-Privilege Containment</span>
+                <span class="badge">Forensic Disk Snapshots</span>
             </div>
         </div>
 
@@ -625,54 +628,54 @@
             </div>
 
             <div class="metric-card">
-                <div class="metric-label">SOC Alert Fatigue</div>
+                <div class="metric-label">SOC Alert Bottleneck</div>
                 <div class="metric-value" style="color: var(--accent-cyan);">
                     100% Automated
                 </div>
-                <div class="metric-sub">Zero manual triage bottlenecks</div>
+                <div class="metric-sub">Zero manual human triage delay</div>
             </div>
 
             <div class="metric-card">
-                <div class="metric-label">Forensic Snapshot Time</div>
+                <div class="metric-label">Supported Cloud Platforms</div>
                 <div class="metric-value" style="color: var(--accent-purple);">
-                    Instant
+                    AWS • GCP • Azure
                 </div>
-                <div class="metric-sub">EBS disk captured prior to isolation</div>
+                <div class="metric-sub">Unified multi-cloud engine</div>
             </div>
 
             <div class="metric-card">
-                <div class="metric-label">Breach Cost Prevented</div>
+                <div class="metric-label">Est. Breach Cost Savings</div>
                 <div class="metric-value" style="color: var(--accent-green);">
                     ~$4.35M
                 </div>
-                <div class="metric-sub">Estimated cost per credential leak</div>
+                <div class="metric-sub">Per credential exfiltration incident</div>
             </div>
         </div>
 
         <!-- Video Simulation Player Container -->
         <div class="video-player-container">
-            <div class="video-screen">
+            <div class="video-screen" id="videoStage">
                 <!-- HUD Header -->
                 <div class="hud-header">
                     <div class="hud-title">
                         <span>▶ SIMULATOR_STAGE:</span>
                         <span id="hudStepName" style="color: #fff;">READY_FOR_TRIGGER</span>
                     </div>
-                    <div class="hud-status" id="hudStatus">PIPELINE ACTIVE</div>
+                    <div class="hud-status" id="hudStatus">MULTI-CLOUD PIPELINE ACTIVE</div>
                 </div>
 
                 <!-- Stage Content (Diagram + Terminal Logs) -->
                 <div class="stage-content">
                     <!-- Left: Interactive Topology Diagram -->
                     <div class="topology-box">
-                        <div class="topology-title">🌐 REAL-TIME INFRASTRUCTURE TOPOLOGY</div>
+                        <div class="topology-title">🌐 INFRASTRUCTURE TOPOLOGY & ATTACK VECTOR</div>
                         <div class="node-flow">
                             <div class="node-item" id="nodeAlert">
                                 <div class="node-info">
                                     <span class="node-icon">🚨</span>
                                     <div>
                                         <div class="node-name">Security Webhook Ingestion</div>
-                                        <div class="node-sub">GuardDuty / GCP SCC Alert</div>
+                                        <div class="node-sub">GuardDuty / GCP SCC / Azure Sentinel</div>
                                     </div>
                                 </div>
                                 <span class="node-status-tag status-neutral" id="tagAlert">IDLE</span>
@@ -682,8 +685,8 @@
                                 <div class="node-info">
                                     <span class="node-icon">⚡</span>
                                     <div>
-                                        <div class="node-name">Step Functions Orchestrator</div>
-                                        <div class="node-sub">orchestration_workflow.json</div>
+                                        <div class="node-name">Multi-Cloud Orchestrator</div>
+                                        <div class="node-sub">incident_responder.py</div>
                                     </div>
                                 </div>
                                 <span class="node-status-tag status-neutral" id="tagOrchestrator">STANDBY</span>
@@ -694,7 +697,7 @@
                                     <span class="node-icon">💻</span>
                                     <div>
                                         <div class="node-name" id="targetName">Target Cloud Asset</div>
-                                        <div class="node-sub" id="targetSub">Select Attack Scenario Below</div>
+                                        <div class="node-sub" id="targetSub">Select Cloud Attack Scenario Below</div>
                                     </div>
                                 </div>
                                 <span class="node-status-tag status-neutral" id="tagTarget">NORMAL</span>
@@ -708,11 +711,11 @@
                             <span class="dot dot-red"></span>
                             <span class="dot dot-yellow"></span>
                             <span class="dot dot-green"></span>
-                            <span class="terminal-title">incident_responder.py --live-execution</span>
+                            <span class="terminal-title">incident_responder.py --live-multi-cloud</span>
                         </div>
                         <div id="terminalBody">
-                            <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SYSTEM_READY</span> Automated Incident Response Pipeline initialized.</div>
-                            <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">WAITING</span> Select a test scenario below to start the video simulation...</div>
+                            <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SYSTEM_READY</span> Multi-Cloud Incident Response Pipeline initialized.</div>
+                            <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">WAITING</span> Select a cloud scenario below to start the pitch simulation...</div>
                         </div>
                     </div>
                 </div>
@@ -720,7 +723,7 @@
                 <!-- Subtitle Voiceover Box -->
                 <div class="voiceover-bar">
                     <span class="speaker-icon">🎙️</span>
-                    <div id="voiceoverText">Click <b>"▶ Play Demonstration Video"</b> or select a scenario below to watch sub-second automated containment in action.</div>
+                    <div id="voiceoverText">Click <b>"▶ Play Pitch Video"</b> to watch sub-second automated cloud isolation in action!</div>
                 </div>
             </div>
 
@@ -736,7 +739,7 @@
                 <div class="controls-row">
                     <div class="btn-group">
                         <button class="btn-control btn-primary-action" id="playBtn" onclick="togglePlay()">
-                            <span>▶ Play Demo Video</span>
+                            <span>▶ Play Pitch Video</span>
                         </button>
                         <button class="btn-control" onclick="resetVideo()">
                             <span>🔄 Reset</span>
@@ -746,20 +749,23 @@
                     <div class="btn-group">
                         <span style="font-size: 12px; color: var(--text-muted);">Simulation Speed:</span>
                         <button class="btn-control" id="speedBtn" onclick="toggleSpeed()" style="padding: 4px 10px;">1.0x</button>
+                        <button class="btn-control btn-export-video" onclick="downloadRecordedDemo()">
+                            <span>🎥 Record & Download Demo Video (.webm)</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Attack Scenario Selection Cards -->
-        <h3 style="font-size: 18px; margin-bottom: 16px;">Select Demo Scenario:</h3>
-        <div class="scenarios-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        <h3 style="font-size: 18px; margin-bottom: 16px;">Select Cloud Scenario:</h3>
+        <div class="scenarios-grid">
             <div class="scenario-card active" id="scenarioCompute" onclick="selectScenario('compute')">
                 <div class="scenario-title">
                     <span>AWS: EC2 Malware Isolation</span>
                     <span style="color: var(--accent-red);">HIGH</span>
                 </div>
-                <div class="scenario-desc">GuardDuty malware alert on production EC2 (i-0a8b9c1d2e3f45678). Executes Security Group swap & EBS forensic snapshot.</div>
+                <div class="scenario-desc">GuardDuty malware alert on production EC2 (i-0a8b9c1d2e3f45678). Swaps Security Group to DenyAll & captures EBS forensic snapshot.</div>
                 <div class="scenario-meta">ACTIONS: AWS_SG_QUARANTINE • EBS_SNAPSHOT</div>
             </div>
 
@@ -784,10 +790,9 @@
 
     </div>
 
-
     <!-- Footer -->
     <footer>
-        <p>Automated Cloud Incident Response Pipeline • Created by Lead Cloud Security & Automation Engineer</p>
+        <p>Multi-Cloud Automated Incident Response Pipeline • Created by Lead Cloud Security & Automation Engineer</p>
         <p style="margin-top: 6px; font-family: var(--font-mono); font-size: 11px;">GitHub Repository: <a href="https://github.com/suresh-zatch/AutomatedIncidentResponse" target="_blank" style="color: var(--accent-cyan); text-decoration: none;">github.com/suresh-zatch/AutomatedIncidentResponse</a></p>
     </footer>
 
@@ -802,19 +807,19 @@
 
         const scenarios = {
             compute: {
-                targetName: "EC2 Instance: i-0a8b9c1d2e3f45678",
+                targetName: "AWS EC2 Instance: i-0a8b9c1d2e3f45678",
                 targetSub: "Production Web Server (AWS us-west-2)",
                 timeline: [
-                    { time: 0, step: "WEBHOOK_INGEST", alertStatus: "active-threat", tagAlert: "ALERT RECEIVED", orchestratorStatus: "", tagOrchestrator: "STANDBY", targetStatus: "active-threat", tagTarget: "COMPROMISED", log: "CRITICAL ALERT GuardDuty detected Malware Execution on i-0a8b9c1d2e3f45678.", voice: "Step 1: Security alert webhook received from GuardDuty flagging malware execution on EC2 instance i-0a8b9c1d2e3f45678." },
-                    { time: 3, step: "ORCHESTRATOR_DISPATCH", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "active-threat", tagOrchestrator: "DISPATCHING", targetStatus: "active-threat", tagTarget: "COMPROMISED", log: "AWS Step Functions state machine initiated workflow execution ID: INC-2026-8801.", voice: "Step 2: Step Functions orchestrator evaluates severity (CRITICAL) and dispatches containment payload within 0.05 seconds." },
-                    { time: 6, step: "NETWORK_ISOLATION", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "active-threat", tagTarget: "ISOLATING", log: "Detaching production security groups [sg-web-prod, sg-default]... Attaching 'sg-099a88b77c66d55e4-quarantine-deny-all'.", voice: "Step 3: Network containment executed! Production security groups stripped and replaced with zero-trust Quarantine SG." },
-                    { time: 9, step: "FORENSIC_SNAPSHOT", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "contained", tagTarget: "SNAPSHOT_CREATED", log: "Initiating EBS forensic snapshot 'snap-forensic-alert-2026-8801' for volume vol-ebs-0a8b9c1d2e3f45678.", voice: "Step 4: Point-in-time EBS forensic snapshot captured prior to isolation for SOC digital forensics investigation." },
-                    { time: 12, step: "TAG_AND_NOTIFY", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "QUARANTINED", log: "Applied SecurityStatus=QUARANTINED tag. Dispatched SNS alert to #soc-incident-response channel.", voice: "Step 5: Resource tagged as QUARANTINED. Notification sent to SOC Slack channel. Total containment time: 0.38 seconds!" },
+                    { time: 0, step: "WEBHOOK_INGEST", alertStatus: "active-threat", tagAlert: "GUARDDUTY ALERT", orchestratorStatus: "", tagOrchestrator: "STANDBY", targetStatus: "active-threat", tagTarget: "COMPROMISED", log: "CRITICAL ALERT GuardDuty detected Malware Execution on i-0a8b9c1d2e3f45678.", voice: "Step 1: GuardDuty webhook received flagging malware execution on EC2 instance i-0a8b9c1d2e3f45678." },
+                    { time: 3, step: "ORCHESTRATOR_DISPATCH", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "active-threat", tagOrchestrator: "DISPATCHING", targetStatus: "active-threat", tagTarget: "COMPROMISED", log: "AWS Step Functions state machine initiated workflow execution ID: INC-2026-8801.", voice: "Step 2: Step Functions orchestrator evaluates severity (CRITICAL) and dispatches containment payload." },
+                    { time: 6, step: "NETWORK_ISOLATION", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "active-threat", tagTarget: "ISOLATING", log: "Detaching production security groups [sg-web-prod]... Attaching 'sg-099a88b77c66d55e4-quarantine-deny-all'.", voice: "Step 3: Network containment executed! Production security groups stripped and replaced with zero-trust Quarantine SG." },
+                    { time: 9, step: "FORENSIC_SNAPSHOT", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "EXECUTING", targetStatus: "contained", tagTarget: "SNAPSHOT_CREATED", log: "Initiating EBS forensic snapshot 'snap-aws-forensic-alert-8801' for volume vol-ebs-0a8b9c1d2e3f45678.", voice: "Step 4: Point-in-time EBS forensic snapshot captured prior to isolation for SOC digital forensics investigation." },
+                    { time: 12, step: "TAG_AND_NOTIFY", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "QUARANTINED", log: "Applied SecurityStatus=QUARANTINED tag. Dispatched SNS alert to #soc-incident-response channel.", voice: "Step 5: Resource tagged as QUARANTINED. Total containment time: 0.38 seconds!" },
                     { time: 15, step: "CONTAINMENT_SUCCESSFUL", alertStatus: "", tagAlert: "PROCESSED", orchestratorStatus: "contained", tagOrchestrator: "COMPLETED", targetStatus: "contained", tagTarget: "SECURE", log: "SUCCESS: Automated containment completed. Zero attacker dwell time achieved.", voice: "Demonstration complete: Attacker dwell time reduced from 45 minutes to sub-second automated isolation!" }
                 ]
             },
             iam: {
-                targetName: "IAM Identity: sec-analyst-temp",
+                targetName: "AWS IAM Identity: sec-analyst-temp",
                 targetSub: "Compromised Access Keys (AWS Global)",
                 timeline: [
                     { time: 0, step: "WEBHOOK_INGEST", alertStatus: "active-threat", tagAlert: "ALERT RECEIVED", orchestratorStatus: "", tagOrchestrator: "STANDBY", targetStatus: "active-threat", tagTarget: "CREDENTIAL_EXFIL", log: "CRITICAL ALERT: Unauthorized credential access detected for IAM user 'sec-analyst-temp'.", voice: "Step 1: Security alert received flagging stolen access keys for user sec-analyst-temp." },
@@ -845,7 +850,6 @@
             document.getElementById('scenarioIAM').classList.toggle('active', name === 'iam');
             document.getElementById('scenarioAzure').classList.toggle('active', name === 'azure');
 
-            
             const target = scenarios[name];
             document.getElementById('targetName').innerText = target.targetName;
             document.getElementById('targetSub').innerText = target.targetSub;
@@ -854,22 +858,19 @@
         }
 
         function togglePlay() {
-            if (isPlaying) {
-                pauseVideo();
-            } else {
-                playVideo();
-            }
+            if (isPlaying) pauseVideo();
+            else playVideo();
         }
 
         function playVideo() {
             isPlaying = true;
-            document.getElementById('playBtn').innerHTML = '<span>⏸ Pause Demo</span>';
+            document.getElementById('playBtn').innerHTML = '<span>⏸ Pause Pitch</span>';
             playbackTimer = setInterval(tick, 1000 / speed);
         }
 
         function pauseVideo() {
             isPlaying = false;
-            document.getElementById('playBtn').innerHTML = '<span>▶ Play Demo Video</span>';
+            document.getElementById('playBtn').innerHTML = '<span>▶ Play Pitch Video</span>';
             if (playbackTimer) clearInterval(playbackTimer);
         }
 
@@ -880,7 +881,7 @@
             
             const term = document.getElementById('terminalBody');
             term.innerHTML = `
-                <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SYSTEM_READY</span> Automated Incident Response Pipeline initialized.</div>
+                <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SYSTEM_READY</span> Multi-Cloud Incident Response Pipeline initialized.</div>
                 <div class="log-line"><span class="log-timestamp">[00:00:00]</span> <span class="log-info">SCENARIO</span> Active: ${scenarios[activeScenario].targetName}</div>
             `;
         }
@@ -916,25 +917,19 @@
         }
 
         function updateUI() {
-            // Update time & progress bar
             document.getElementById('timeDisplay').innerText = `00:${currentTime < 10 ? '0' + currentTime : currentTime} / 00:${maxTime}`;
             const pct = (currentTime / maxTime) * 100;
             document.getElementById('progressBarFill').style.width = pct + '%';
 
-            // Find current timeline step
             const currentData = scenarios[activeScenario];
             const steps = currentData.timeline;
             let activeStep = steps[0];
             for (let s of steps) {
-                if (currentTime >= s.time) {
-                    activeStep = s;
-                }
+                if (currentTime >= s.time) activeStep = s;
             }
 
-            // Update HUD
             document.getElementById('hudStepName').innerText = activeStep.step;
             
-            // Update Topology Nodes
             const nodeAlert = document.getElementById('nodeAlert');
             const tagAlert = document.getElementById('tagAlert');
             nodeAlert.className = 'node-item ' + activeStep.alertStatus;
@@ -950,10 +945,8 @@
             nodeTarget.className = 'node-item ' + activeStep.targetStatus;
             tagTarget.innerText = activeStep.tagTarget;
 
-            // Update Voiceover Bar
             document.getElementById('voiceoverText').innerHTML = activeStep.voice;
 
-            // Append log line if exact time match
             if (activeStep.time === currentTime) {
                 const term = document.getElementById('terminalBody');
                 const timeStr = `00:00:${currentTime < 10 ? '0' + currentTime : currentTime}`;
@@ -962,6 +955,42 @@
                 newLog.innerHTML = `<span class="log-timestamp">[${timeStr}]</span> <span class="log-success">EXECUTE</span> ${activeStep.log}`;
                 term.appendChild(newLog);
                 term.scrollTop = term.scrollHeight;
+            }
+        }
+
+        /* Video Recorder API Feature */
+        async function downloadRecordedDemo() {
+            alert("Starting Video Stream Capture! The presentation video will play and download as 'AutomatedIncidentResponse_Demo.webm' automatically once complete.");
+            
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: { mediaSource: "screen" } });
+                const mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+                const chunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) chunks.push(e.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: "video/webm" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "AutomatedIncidentResponse_Demo.webm";
+                    a.click();
+                };
+
+                mediaRecorder.start();
+                resetVideo();
+                playVideo();
+
+                setTimeout(() => {
+                    mediaRecorder.stop();
+                    stream.getTracks().forEach(track => track.stop());
+                }, (maxTime + 1) * 1000);
+
+            } catch (err) {
+                alert("Browser Screen Capture cancelled or not supported. You can also play the demo directly on screen!");
             }
         }
     </script>
